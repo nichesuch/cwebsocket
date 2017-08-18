@@ -39,9 +39,10 @@ extern "C" {
         return (n + 2) / 3 * 4;
     }
     
-    static size_t base64(char *buf, size_t nbuf, const unsigned char *p, size_t n) {
-        const char t[64] PROGMEM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        size_t i, m = base64len(n);
+    static size_t base64(char *buf, size_t nbuf, const unsigned char *p, size_t nn) {
+        const char t[] PROGMEM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        size_t m = base64len(nn);
+		long long i,n = (long long) nn;
         unsigned x;
         
         if (nbuf >= m)

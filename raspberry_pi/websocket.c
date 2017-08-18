@@ -76,7 +76,7 @@ enum wsFrameType wsParseHandshake(const uint8_t *inputFrame, size_t inputLength,
     if (memcmp_P(inputFrame, PSTR("GET "), 4) != 0)
         return WS_ERROR_FRAME;
     // measure resource size
-    char *first = strchr((const char *)inputFrame, ' ');
+    char *first = strchr((char *)inputFrame, ' ');
     if (!first)
         return WS_ERROR_FRAME;
     first++;
@@ -177,7 +177,7 @@ void wsGetHandshakeAnswer(const struct handshake *hs, uint8_t *outFrame,
 
     char *responseKey = NULL;
     uint8_t length = strlen(hs->key)+strlen_P(secret);
-    responseKey = malloc(length);
+    responseKey = (char*)malloc(length);
     memcpy(responseKey, hs->key, strlen(hs->key));
     memcpy_P(&(responseKey[strlen(hs->key)]), secret, strlen_P(secret));
     unsigned char shaHash[20];
@@ -295,7 +295,7 @@ enum wsFrameType wsParseInputFrame(uint8_t *inputFrame, size_t inputLength,
             opcode == WS_PING_FRAME ||
             opcode == WS_PONG_FRAME
     ){
-        enum wsFrameType frameType = opcode;
+        enum wsFrameType frameType = (enum wsFrameType)opcode;
 
         uint8_t payloadFieldExtraBytes = 0;
         size_t payloadLength = getPayloadLength(inputFrame, inputLength,

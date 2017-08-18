@@ -1,23 +1,40 @@
 ## Overview
-cWebsocket is lightweight websocket server library written in C. This library include functions for easy creating websocket server. It implements [websocket protocol rfc6455](http://tools.ietf.org/html/rfc6455).
+The code is pure C websocket server code that of original URL is [http://github.com/m8rge/cwebsocket](http://github.com/m8rge/cwebsocket).
 
-## Features
-Pure C.  
-It's tiny!  
-It very easy to embed in any your application at any platform.  
-Library design was made with microcontrollers architecture in mind.  
-MIT Licensed.
+## Modified from Original site
+- Original code supports to Arduino and x86. It does not work on Raspberry Pi. This code works the both of x86 and Raspberry Pi.
+- Supporting to the both compilier of gcc and g++.
+- Add Makefile
 
-## Microcontrollers
-With this library you can turn your Arduino to websocket server and get realtime properties from your microcontroller only with browser!
+# How to use
+- build executable file and execute websocket server.
+```
+   git clone git://github.com/NaotakaSaito/cwebsocket
+   cd cwebsocket
+   cd raspberry_pi
+   make
+   ./websocket
+```  
 
-## Notes
-### Not supported
-* [secure websocket](http://tools.ietf.org/html/rfc6455#section-3)
-* [websocket extensions](http://tools.ietf.org/html/rfc6455#section-9)
-* [websocket subprotocols](http://tools.ietf.org/html/rfc6455#section-1.9)
-* [status codes](http://tools.ietf.org/html/rfc6455#section-7.4) 
-* [cookies and/or authentication-related header fields](http://tools.ietf.org/html/rfc6455#page-19)
-* [continuation frame](http://tools.ietf.org/html/rfc6455#section-11.8) (all payload data must be encapsulated into one websocket frame)
-* big frames, which payload size bigger than 0xFFFF
- 
+- Open client.html by browser.
+
+
+## 概要
+このコードは[http://github.com/m8rge/cwebsocket](http://github.com/m8rge/cwebsocket)を元に変更を行ったC言語によるwebsockerのサーバー用コードです。
+
+## 変更点
+- オリジナルコードはArduinoとX86をサポートしていますが、本ソフトウエアはRaspberry Piとx86をサポートしています。
+- gccとg++の双方でコンパイルができます。
+- Makefileを作成しました。
+
+## 使用方法
+- 以下の手順で事項ファイルを作成してからサーバーを起動します。
+```
+   git clone git://github.com/NaotakaSaito/cwebsocket
+   cd cwebsocket
+   cd raspberry_pi
+   make
+   ./websocket
+```  
+
+- ブラウザで同梱されているclient.htmlを開いてください。

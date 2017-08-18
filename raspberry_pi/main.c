@@ -34,7 +34,8 @@
 
 #define PORT 8088
 #define BUF_LEN 0xFFFF
-#define PACKET_DUMP
+
+//#define PACKET_DUMP
 
 uint8_t gBuffer[BUF_LEN];
 
@@ -157,7 +158,7 @@ void clientWorker(int clientSocket)
                 }
             } else if (frameType == WS_TEXT_FRAME) {
                 uint8_t *recievedString = NULL;
-                recievedString = malloc(dataSize+1);
+                recievedString = (uint8_t *)malloc(dataSize+1);
                 assert(recievedString);
                 memcpy(recievedString, data, dataSize);
                 recievedString[ dataSize ] = 0;
