@@ -39,7 +39,15 @@
 #define BUF_LEN 0xFFFF
 
 //#define PACKET_DUMP
-
+#ifndef bool
+	#define bool int
+#endif
+#ifndef true
+	#define true 1
+#endif
+#ifndef false
+	#define false 0
+#endif
 uint8_t gBuffer[BUF_LEN];
 bool isContinue=true;
 bool isConnect=false;
