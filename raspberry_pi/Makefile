@@ -1,7 +1,8 @@
 # コンパイラを指定
 CC :=g++
 # インクルードファイル等
-CFLAGS := -DPACKET_DUMP
+#CFLAGS := -DPACKET_DUMP
+#CFLAGS := 
 LDFLAGS :=
 LIB := -
 # ディレクトリ内の全てのC++ファイルをコンパイル
@@ -15,8 +16,8 @@ EXECUTABLE :=$(SOURCES:.c=)
 
 
 all: 
-	$(CC) $(SOURCES) -o websocket
-#	$(CC) $(CFLAGS) $(SOURCES) -o websocket
+	$(CC) $(CFLAGS) $(SOURCES) -o websocket
+#	$(CC) $(SOURCES) -o websocket
 
 clean:
 	    rm -rf $(EXECUTABLE)
