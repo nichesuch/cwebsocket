@@ -4,7 +4,7 @@ CC :=g++
 #CFLAGS := -DPACKET_DUMP
 #CFLAGS := 
 LDFLAGS :=
-LIB := -
+LIB := -lpthread
 # ディレクトリ内の全てのC++ファイルをコンパイル
 SOURCES :=$(wildcard *.c)
 # C++ファイルの.cppをとったものを実行ファイルの名前とする
@@ -16,7 +16,7 @@ EXECUTABLE :=$(SOURCES:.c=)
 
 
 all: 
-	$(CC) $(CFLAGS) $(SOURCES) -o websocket
+	$(CC) $(LIB) $(CFLAGS) $(SOURCES) -o websocket
 #	$(CC) $(SOURCES) -o websocket
 
 clean:
