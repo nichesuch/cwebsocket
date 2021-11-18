@@ -45,4 +45,4 @@ The code is pure C websocket server code that of original URL is [http://github.
 - PORT 8088 : websocketの受信ポート
 - BUF_LEN 1024 : バッファサイズ(tailした時にこれを超えてしまうとグラフが崩れる)
 - LOG_FILE_PATH "/tmp/sample.log" : ログファイルのパス
-- CHECK_INTERVAL 500 : ログファイルをチェックする間隔(clientWorker内のwhileループを回る回数、ここを大きくすると場合はバッファサイズも大きくする。)
+- CHECK_INTERVAL 500 : ログファイルをチェックする間隔(clientWorker内のwhileループを回る回数、ここを大きくする場合はバッファサイズも大きくする。)
