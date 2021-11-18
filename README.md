@@ -9,7 +9,8 @@ The code is pure C websocket server code that of original URL is [http://github.
 # How to use
 - build executable file and execute websocket server.
 ```
-   git clone git://github.com/nichesuch/cwebsocket
+   sudo apt install git
+   git clone -b feature/realtime_monitor https://github.com/nichesuch/cwebsocket.git
    cd cwebsocket
    cd raspberry_pi
    make
@@ -29,7 +30,8 @@ The code is pure C websocket server code that of original URL is [http://github.
 ## 使用方法
 - 以下の手順で事項ファイルを作成してからサーバーを起動します。
 ```
-   git clone git://github.com/nichesuch/cwebsocket
+   sudo apt install git
+   git clone -b feature/realtime_monitor https://github.com/nichesuch/cwebsocket.git
    cd cwebsocket
    cd raspberry_pi
    make
