@@ -35,9 +35,12 @@
 #include <errno.h>
 #include <pthread.h>
 #include "list.h"
+#include "gettail.h"
 
 #define PORT 8088
 #define BUF_LEN 1024
+#define LOG_FILE_PATH "/tmp/sample.log"
+#define CHECK_INTERVAL 500
 
 //#define PACKET_DUMP
 #ifndef bool
@@ -128,11 +131,35 @@ void *clientWorker(void *param)
 	enum wsFrameType frameType = WS_INCOMPLETE_FRAME;
 	struct handshake hs;
 	nullHandshake(&hs);
+	
+	bool startSending = false;
+	int sendWaitCount = 0;
+	const uint8_t* tailBuffer;
+	fpos_t* tailPosition;
+	
+	tailBuffer = (const uint8_t*)malloc(BUF_LEN);
+	memset((void *)tailBuffer, 0, BUF_LEN);
+	tailPosition = (fpos_t *)malloc(sizeof(fpos_t));
+	memset(tailPosition, 0, sizeof(fpos_t));
 
 #define prepareBuffer frameSize = BUF_LEN; memset(ths->gBuffer, 0, BUF_LEN);
 #define initNewFrame frameType = WS_INCOMPLETE_FRAME; readedLength = 0; memset(ths->gBuffer, 0, BUF_LEN);
 
 	while (isContinue && ths->isContinue &&(frameType == WS_INCOMPLETE_FRAME)) {
+		if(startSending) {
+			sendWaitCount++;
+			if(sendWaitCount % CHECK_INTERVAL == 0) {
+				sendWaitCount = 0;
+				long readSize = getTail(LOG_FILE_PATH, tailPosition, (unsigned char *)tailBuffer, BUF_LEN);
+				if(readSize != 0) {
+					prepareBuffer;
+					wsMakeFrame(tailBuffer, readSize, ths->gBuffer, &frameSize, WS_TEXT_FRAME);
+					safeSendAll(ths->gBuffer, frameSize);
+					initNewFrame;
+				}
+			}
+		}
+
 		ssize_t readed = recv(ths->clientSocket, ths->gBuffer+readedLength, BUF_LEN-readedLength, MSG_DONTWAIT);
 		if((readed == -EAGAIN) || (readed == -EWOULDBLOCK)){
 			printf("readed = %ld\n",readed);
@@ -210,7 +237,7 @@ void *clientWorker(void *param)
 			} else if (frameType == WS_TEXT_FRAME) {
 				uint8_t *recievedString = NULL;
 				recievedString = (uint8_t *)malloc(dataSize+1);
-				assert(recievedString);
+				//assert(recievedString);
 				memcpy(recievedString, data, dataSize);
 				recievedString[ dataSize ] = 0;
 
@@ -219,6 +246,10 @@ void *clientWorker(void *param)
 				free(recievedString);
 				safeSendAll(ths->gBuffer, frameSize);
 				initNewFrame;
+				
+				initTail(LOG_FILE_PATH, tailPosition);
+				printf("init tail=%d\n", *tailPosition);
+				startSending = true;
 			}
 		}
 	} // read/write cycle
@@ -228,6 +259,8 @@ void *clientWorker(void *param)
 	free(ths->gBuffer);
 	list_del(&ths->list);
 	free(ths);
+	free(tailBuffer);
+	free(tailPosition);
 	pthread_exit(NULL);
 	return NULL;
 }
