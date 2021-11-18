@@ -259,7 +259,7 @@ void *clientWorker(void *param)
 	free(ths->gBuffer);
 	list_del(&ths->list);
 	free(ths);
-	free(tailBuffer);
+	free((void *)tailBuffer);
 	free(tailPosition);
 	pthread_exit(NULL);
 	return NULL;
