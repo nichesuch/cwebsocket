@@ -42,6 +42,11 @@ The code is pure C websocket server code that of original URL is [http://github.
 - ラズベリーパイの`ws:IPアドレス:8088/echo`に接続してください。
 - 表示間隔を入力して開始してください。
 
+## 表示形式
+- client.html : Plotly Streamingを利用した折れ線グラフ
+- client_noplot.html : 受信した内容をそのまま表示
+- client_simpleplot.html : CUI的な表示(Plotly版より高速)
+
 ## 調整
 `main.c`の以下の定義で調整
 - PORT 8088 : websocketの受信ポート
