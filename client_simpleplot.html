@@ -4,7 +4,8 @@
     <title>Websocket client</title>
     <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
     <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/locale/ja.js"></script>
     <style>
     .preform {
     	white-space: pre;
@@ -25,11 +26,12 @@
         </form>
         <form action="" id="sendForm" class="row">
         	<div class="span8">
-	        	<label>データ表示範囲(ms)</label>
-	            <div class="input-append">
-					<input class="input-large" type="number" id="range" value="12000"/>
-	                <button class="btn btn-primary" type="submit" id="send" disabled="disabled">Start</button>
-	            </div>
+				<button class="btn btn-primary" type="submit" id="send" disabled="disabled">Start</button>
+	        	<label>データ表示範囲</label>
+				<input class="input-large" type="number" id="from" value="0"/>
+				～<input class="input-large" type="number" id="to" value="10"/>
+	        	<label>解像度</label>
+				<input class="input-large" type="number" id="steps" value="40"/>
             </div>
             <div class="span2"><span class="" id="Hz">??</span>Hz</div>
             <div class="span2"><span class="" id="buffer">??</span>Bytes</div>
@@ -109,16 +111,22 @@
         var cntHz = 0;
         var cntDataSize = 0;
         
-        const MAX_SIZE = 32767;
-        const STEP_SIZE = 40;
+        var RANGE_FROM = 0;
+        var RANGE_TO = 32767
+        var MAX_SIZE = RANGE_TO - RANGE_FROM;
+        var STEP_SIZE = 40;
         
         function plotlabel(data){
            let pos = Math.round((STEP_SIZE-String(data).length) / 2);
            return " ".repeat(pos) + data + " ".repeat(STEP_SIZE - (pos + String(data).length) + 1);
         }
         function plot(data){
-           let pos = Math.round(data / (MAX_SIZE / STEP_SIZE));
-           return " ".repeat(pos) + "*" + " ".repeat(STEP_SIZE - pos);
+           let pos = Math.round((data - RANGE_FROM) / (MAX_SIZE / STEP_SIZE));
+           if(pos < 0 || STEP_SIZE - pos < 0){
+             return " ".repeat(Number(STEP_SIZE) + 1);
+           }else{
+             return " ".repeat(pos) + "*" + " ".repeat(STEP_SIZE - pos);
+           }
         }
 
         $(document).ready(function() {
@@ -153,11 +161,12 @@
 		                    let data_x = list[1];
 		                    let data_y = list[2];
 		                    let data_z = list[3];
-                            $('#myDiv').prepend('<li class="preform">'
-                            	+plotlabel(time.getTime()) + '|'
+		                    let view_item = '<li class="preform">'
+                            	+plotlabel( moment(time).format("YYYY/MM/DD HH:mm:ss.SS") ) + '|'
                             	+plot(data_x) + '|'
                             	+plot(data_y) + '|'
-                            	+plot(data_z) + '|' +'</li>');
+                            	+plot(data_z) + '|' +'</li>';
+                            $('#myDiv').prepend(view_item);
 		                    let update = {
 		                        x:  [[time], [time], [time]],
 		                        y: [[data_x],[data_y], [data_z]]
@@ -213,10 +222,13 @@
             });
             $('#sendForm').on('submit', function() {
                 var message = 'start\n';
-                range = document.getElementById("range").value;
+                RANGE_FROM = $('#from').val();
+                RANGE_TO = $('#to').val();
+                MAX_SIZE = RANGE_TO - RANGE_FROM;
+                STEP_SIZE = $('#steps').val();
                 ws.send(message);
                 $('#log').append('<li>sended: <span class="badge">' + message + '</span></li>');
-                $('#plotTitle').prepend('<li class="preform">'
+                $('#plotTitle').html('<li class="preform">'
                             	+plotlabel('time') + '|'
                             	+plotlabel('x data') + '|'
                             	+plotlabel('y data') + '|'
@@ -229,6 +241,26 @@
                 ws.close();
 
                 return false;
+            });
+            
+            $('#from').on('change', function() {
+                RANGE_FROM = $(this).val();
+                MAX_SIZE = RANGE_TO - RANGE_FROM;
+                console.log("from:"+RANGE_FROM);
+            });
+            $('#to').on('change', function() {
+                RANGE_TO = $(this).val();
+                MAX_SIZE = RANGE_TO - RANGE_FROM;
+                console.log("to:"+RANGE_TO);
+            });
+            $('#steps').on('change', function() {
+                STEP_SIZE = $(this).val();
+                console.log("steps:"+STEP_SIZE);
+                $('#plotTitle').html('<li class="preform">'
+                            	+plotlabel('time') + '|'
+                            	+plotlabel('x data') + '|'
+                            	+plotlabel('y data') + '|'
+                            	+plotlabel('z data') + '|' +'</li>');
             });
         });
     </script>
