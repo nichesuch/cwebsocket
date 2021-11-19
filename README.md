@@ -44,8 +44,11 @@ The code is pure C websocket server code that of original URL is [http://github.
 
 ## 表示形式
 - client.html : Plotly Streamingを利用した折れ線グラフ
+![image](https://user-images.githubusercontent.com/2096703/142622886-a90c9d7b-f743-4336-92de-8f3647630e2b.png)
 - client_noplot.html : 受信した内容をそのまま表示
+![image](https://user-images.githubusercontent.com/2096703/142622470-67a09d60-77f8-4316-9065-9b8210f18eb6.png)
 - client_simpleplot.html : CUI的な表示(Plotly版より高速)
+![image](https://user-images.githubusercontent.com/2096703/142622182-38639604-e59b-431b-8aec-9373d6c86700.png)
 
 ## 調整
 `main.c`の以下の定義で調整
